@@ -1,0 +1,86 @@
+version: '3.2'
+services:
+  es1-data:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.8.0
+    container_name: es1-data
+    environment:
+      - node.name=es1
+      - cluster.name=es-data
+      - discovery.seed_hosts=es2-data,es3-data
+      - cluster.initial_master_nodes=es1,es2,es3
+      - bootstrap.memory_lock=true
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - elastic1_data:/usr/share/elasticsearch/data
+      - ./jvm.options:/usr/share/elasticsearch/config/jvm.options
+    ports:
+      - 9700:9200
+    networks:
+      - ELK_BRDG
+  es2-data:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.8.0
+    container_name: es2-data
+    environment:
+      - node.name=es2
+      - cluster.name=es-data
+      - discovery.seed_hosts=es1-data,es3-data
+      - cluster.initial_master_nodes=es1,es2,es3
+      - bootstrap.memory_lock=true
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - elastic2_data:/usr/share/elasticsearch/data
+      - ./jvm.options:/usr/share/elasticsearch/config/jvm.options
+    ports:
+      - 9702:9200
+    networks:
+      - ELK_BRDG
+  es3-data:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.8.0
+    container_name: es3-data
+    environment:
+      - node.name=es3
+      - cluster.name=es-data
+      - discovery.seed_hosts=es1-data,es2-data
+      - cluster.initial_master_nodes=es1,es2,es3
+      - bootstrap.memory_lock=true
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - elastic3_data:/usr/share/elasticsearch/data
+      - ./jvm.options:/usr/share/elasticsearch/config/jvm.options:ro
+    ports:
+      - 9703:9200
+    networks:
+      - ELK_BRDG
+  Metricbeat1:
+    image: docker.elastic.co/beats/metricbeat:7.8.0
+    container_name: Metricbeat1
+    user: root
+    volumes:
+      - ./metric_conf/metricbeat.yml:/usr/share/metricbeat/metricbeat.yml:ro
+      - /proc:/hostfs/proc:ro
+      - /sys/fs/cgroup:/hostfs/sys/fs/cgroup:ro
+      - /:/hostfs:ro
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - ELK_BRDG
+
+volumes:
+  elastic1_data:
+    driver: local
+  elastic2_data:
+    driver: local
+  elastic3_data:
+    driver: local
+
+networks:
+  ELK_BRDG:
+    driver: bridge

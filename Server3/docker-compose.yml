@@ -1,0 +1,28 @@
+version: '3.2'
+services:
+  kibana:
+    image: docker.elastic.co/kibana/kibana:7.8.0
+    container_name: Kibana
+    ports:
+      - 5601:5601
+    environment:
+      ELASTICSEARCH_URL: http://192.168.0.1:9700
+      ELASTICSEARCH_HOSTS: http://192.168.0.1:9700
+    networks:
+      - ELK_BRDG
+  Metricbeat3:
+    image: docker.elastic.co/beats/metricbeat:7.8.0
+    container_name: Metricbeat3
+    user: root
+    volumes:
+      - ./metric_conf/metricbeat.yml:/usr/share/metricbeat/metricbeat.yml:ro
+      - /proc:/hostfs/proc:ro
+      - /sys/fs/cgroup:/hostfs/sys/fs/cgroup:ro
+      - /:/hostfs:ro
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - ELK_BRDG
+
+networks:
+  ELK_BRDG:
+    driver: bridge

@@ -1,4 +1,6 @@
 # Earthquake_ELK
+![Estructura de contenedores](./overview.png)
+
 
 ## Introducción
 

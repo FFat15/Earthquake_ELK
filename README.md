@@ -57,7 +57,7 @@ Para la ejecución de los servidores, primero debemos poner en ejecución el clu
 Si todo está funcionando de manera correcta deberás ver en la salida de Logstash toda la información que va recibiendo. En caso de haber desactivado la salida a pantalla, podrás encontrar la información en Kibana.
 
 Antes de comenzar con el procesamiento de información debes crear las plantillas de índices para indicarle a elastic como manejar los campos que recibirá, esto es importante si quieres tener geo point y utilizarlos en mapas.
-Para crear la platilla, solo debes ir a la sección Dev Tools de Kibana, ahí pega lo que aparece [aquí](./index mappint.txt) en la ventana de consola. deberías recibir un mensaje de aceptado. Si modificaste el nombre del índice, recuerda modificarlo aquí también.
+Para crear la platilla, solo debes ir a la sección Dev Tools de Kibana, ahí pega lo que aparece [aquí](./index_mapping.txt) en la ventana de consola. deberías recibir un mensaje de aceptado. Si modificaste el nombre del índice, recuerda modificarlo aquí también.
 
 
 ### Acceder a Kibana

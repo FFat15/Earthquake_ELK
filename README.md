@@ -4,19 +4,20 @@
 
 ## Introducción
 
-Este proyecto utiliza información de [USGS](https://earthquake.usgs.gov/), específicamente se utiliza su API para la recolección de los terremotos de las últimas 2 décadas. 
-También hacemos uso de docker y su herramienta compose para la ejecución del stack ELK.
+Este proyecto utiliza información de [USGS](https://earthquake.usgs.gov/), específicamente su API para la recolección de los datos de terremotos de las últimas 2 décadas. 
+También hacemos uso de docker y su herramienta compose para la ejecución del stack Elastic + Logstash + Kibana + Beats.
 
 ## Contenido
 - Recomendaciones de uso
-- Cómo obtener los datos
+- ¿Cómo obtener los datos?
 - Ejecución de los servidores
 - Visualizar los datos
 - Acceder a Kibana
 
 ### Recomendaciones de uso
-- El sistema operativo utilizado fue Ubuntu 20.04 LTS
-- Para hacer uso de este proyecto lo recomendado es utilizar 3 máquinas virtuales, la máquina que ejecutará el Server 1 debe tener por lo menos 4GB de RAM, o modificar el jvm.options. 
+- El sistema operativo utilizado fue Ubuntu 20.04 LTS, su uso fuera de este sistema operativo debería funcionar, pero no esta asegurado.
+- Para hacer uso de este proyecto lo recomendado es utilizar 3 máquinas virtuales
+- La máquina que ejecutará el Server 1 debe tener por lo menos 4GB de RAM, o modificar el jvm.options. 
 - Para el server 2 se recomienda tener por lo menos 2GB de RAM.
 - Para el server 3 por lo menos 1GB de RAM
 - La salida de logstash se manda al servidor de elastic y a la pantalla, lo segundo puede desactivarse comentando (con el carácter #) o eliminando las líneas:
@@ -25,7 +26,7 @@ stdout { codec => rubydebug }
 ```
 del [filebeat.conf](./Server2/log_conf/filebeat.conf) y [metricbeat.conf](./Server2/log_conf/metricbeat.conf)
 
-### Cómo obtener los datos
+### ¿Cómo obtener los datos?
 
 Para obtener los datos del USGS se utilizará la función de solicitudes a la API del geológico, esta solo permite hacer solicitudes máximas de 20 mil datos, por lo que, si deseas hacer solicitudes, primero es recomendado hacer una petición count para saber cuántos datos empatan con tu solicitud. Más información de la API del geológico se puede encontrar [aquí](https://earthquake.usgs.gov/fdsnws/event/1/).
 
@@ -67,4 +68,6 @@ GET _cat/indices/
 Aquí verás todos los índices que contiene tu cluster de Elastic. Recuerda el nombre del índice ya que lo usaremos más adelante.
 
 ### Visualizar los datos
-Ve a la opción Discover de la sección Kibana, aquí deberás crear un patrón de índice, puedes utilizar el mismo nombre del índice que vimos en la sección anterior, o acortar el nombre. Kibana te avisrá de las coincidencias con ese nombre. En la siguiente ventana selecciona @timestamp, ya que se ha configurado la fecha de los eventos en @timestamp. Al finalizar verás la cantidad de “hits” que lleva tu índice, si no ves los valores, incrementa tu rango de búsqueda ya que tenemos fechas desde el año 2000.
+Ve a la opción Discover de la sección Kibana, aquí deberás crear un patrón de índice, puedes utilizar el mismo nombre del índice que vimos en la sección anterior, o acortar el nombre. Kibana te avisará de las coincidencias con ese nombre. En la siguiente ventana selecciona @timestamp, ya que se ha configurado la fecha de los eventos en @timestamp. Al finalizar verás la cantidad de “hits” que lleva tu índice, si no ves los valores, incrementa tu rango de búsqueda ya que tenemos fechas desde el año 2000.
+
+De aquí puedes crear tus propias visualizaciones con los datos.
